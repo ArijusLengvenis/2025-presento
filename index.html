@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Our Album</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Literata', serif;
+            overscroll-behavior-y: contain;
+            overflow: hidden;
+            transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
+        }
+        .card {
+            touch-action: none;
+            user-select: none;
+        }
+        .heart-icon {
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .slide-out-right { animation: slideOutRight 0.5s forwards; }
+        @keyframes slideOutRight { to { transform: translateX(100%) rotate(15deg); opacity: 0; } }
+        
+        .slide-out-left { animation: slideOutLeft 0.5s forwards; }
+        @keyframes slideOutLeft { to { transform: translateX(-100%) rotate(-15deg); opacity: 0; } }
+
+        /* Heart Rain Animation */
+        .heart-rain {
+            position: absolute;
+            top: -5vh;
+            font-size: 2rem;
+            animation: fall linear forwards;
+            pointer-events: none;
+        }
+        @keyframes fall {
+            to { transform: translateY(105vh); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="bg-rose-50 text-gray-800">
+
+    <div id="app" class="w-full max-w-sm mx-auto h-full flex flex-col p-4">
+
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-4 flex-shrink-0">
+            <div class="flex items-center space-x-2">
+                <div id="header-icon-container">
+                    <svg class="heart-icon text-rose-500" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                </div>
+                <h1 id="header-title" class="text-xl font-bold">Our Album</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button id="stats-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="heart-icon"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                </button>
+            </div>
+        </header>
+        
+        <!-- Main Content (Swiping) -->
+        <main id="main-content" class="relative fade-in flex-grow flex flex-col">
+            <div id="photo-stack" class="relative w-full h-[60vh] rounded-xl flex-grow">
+                <!-- Photos will be rendered here by JS -->
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex justify-center items-center space-x-8 mt-4 flex-shrink-0">
+                 <button id="email-button" class="bg-white p-4 rounded-full shadow-md hover:bg-gray-100 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="heart-icon text-blue-500"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                </button>
+                <button id="heart-button" class="bg-white p-4 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="heart-icon text-rose-500"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                </button>
+            </div>
+        </main>
+
+        <!-- Intro Modal -->
+        <div id="intro-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 fade-in">
+            <div class="bg-white rounded-xl shadow-lg w-full max-w-sm p-6 text-center">
+                <h2 class="text-2xl font-bold mb-2">Hello, beautiful!</h2>
+                <p class="mb-4">Welcome to our little corner of the world. Swipe right on photos to see our memories. You can also tap a photo to see it up close!</p>
+                <p class="mb-6 text-sm text-gray-500">You wouldn't get this from any other app...</p>
+                <button id="start-button" class="bg-rose-500 text-white px-6 py-2 rounded-full font-bold hover:bg-rose-600 transition-colors">Let's Begin</button>
+            </div>
+        </div>
+
+        <!-- Stats Modal -->
+        <div id="stats-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div class="bg-white rounded-xl shadow-lg w-full max-w-sm p-6 text-center fade-in">
+                <h2 class="text-2xl font-bold mb-4">Our Swipe Story</h2>
+                <div class="space-y-3 text-left">
+                    <p>👉 <span class="font-bold">Total Swipes:</span> <span id="stats-total-swipes">0</span></p>
+                    <p>🗓️ <span class="font-bold">Joined On:</span> <span id="stats-join-date"></span></p>
+                    <p>😂 <span class="font-bold">Favorite Phrase:</span> "Never gonna give you up!"</p>
+                </div>
+                <button id="close-stats-button" class="mt-6 bg-rose-500 text-white px-6 py-2 rounded-full font-bold hover:bg-rose-600 transition-colors">Close</button>
+            </div>
+        </div>
+        
+        <!-- Email Modal -->
+        <div id="email-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div class="bg-white rounded-xl shadow-lg w-full max-w-sm p-6 fade-in">
+                <h2 class="text-2xl font-bold mb-4 text-center">Send a little love</h2>
+                <div class="space-y-4">
+                    <input id="email-recipient" type="email" placeholder="Their email..." class="w-full p-2 border rounded-md">
+                    <input id="email-subject" type="text" placeholder="Thinking of you..." class="w-full p-2 border rounded-md">
+                    <textarea id="email-body" class="w-full p-2 border rounded-md h-24" placeholder="Just wanted to say..."></textarea>
+                </div>
+                <div class="flex justify-center space-x-4 mt-4">
+                    <button id="send-email-button" class="bg-rose-500 text-white px-6 py-2 rounded-full font-bold">Send</button>
+                    <button id="cancel-email-button" class="bg-gray-300 px-6 py-2 rounded-full font-bold">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Zoom Modal -->
+        <div id="zoom-modal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-4 z-50 fade-in">
+            <img id="zoomed-image" src="" class="max-w-full max-h-full rounded-lg">
+            <button id="close-zoom-button" class="absolute top-4 right-4 text-white text-4xl">&times;</button>
+        </div>
+
+        <!-- End of Sweet Album Modal -->
+        <div id="end-sweet-album-modal" class="hidden fixed inset-0 bg-rose-50 flex items-center justify-center p-4 z-50 fade-in">
+            <div class="text-center">
+                <svg class="mx-auto h-24 w-24 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                </svg>
+                <h2 class="text-2xl font-bold mt-4">Album Complete!</h2>
+                <p class="mt-2 text-gray-600">What's next on our journey?</p>
+                <div class="mt-6 flex flex-col space-y-3">
+                    <button id="end-sweet-tell-them-button" class="bg-rose-500 text-white px-6 py-3 rounded-full font-bold">Tell Them Now ❤️</button>
+                    <button id="end-sweet-look-again-button" class="bg-gray-200 text-gray-700 px-6 py-2 rounded-full font-bold">Replay Sweetie Album</button>
+                    <button id="play-evil-album-button" class="bg-gray-700 text-white px-6 py-2 rounded-full font-bold">Play the 'Other' Album 😈</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- End of Evil Album Modal -->
+        <div id="end-evil-album-modal" class="hidden fixed inset-0 bg-slate-800 text-white flex items-center justify-center p-4 z-50 fade-in">
+            <div class="text-center">
+                <svg class="mx-auto h-24 w-24 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                </svg>
+                <h2 class="text-2xl font-bold mt-4">Hate Streak Satisfied!</h2>
+                <p class="mt-2 text-gray-300">Enough of them. Time to get back to what matters.</p>
+                <div class="mt-6 flex flex-col space-y-3">
+                    <button id="end-evil-tell-them-button" class="bg-rose-500 text-white px-6 py-3 rounded-full font-bold">Quick! Email my Cutie ❤️</button>
+                    <button id="end-evil-look-again-button" class="bg-purple-500 text-white px-6 py-2 rounded-full font-bold">Replay the 'Other' Album</button>
+                    <button id="return-to-sweetie-album-button" class="bg-gray-200 text-gray-700 px-6 py-2 rounded-full font-bold">Return to Sweetie Album</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+    <!-- Notification -->
+    <div id="notification" class="fixed bottom-20 left-1/2 -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-full shadow-lg opacity-0 transition-opacity duration-300 pointer-events-none"></div>
+
+    <!-- Heart Rain Container -->
+    <div id="heart-rain-container" class="absolute inset-0 pointer-events-none overflow-hidden z-40"></div>
+
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- DOM Elements ---
+        const body = document.body;
+        const photoStack = document.getElementById('photo-stack');
+        const notification = document.getElementById('notification');
+        const heartRainContainer = document.getElementById('heart-rain-container');
+        const mainContent = document.getElementById('main-content');
+        const headerTitle = document.getElementById('header-title');
+        const headerIconContainer = document.getElementById('header-icon-container');
+        
+        // Modals
+        const introModal = document.getElementById('intro-modal');
+        const statsModal = document.getElementById('stats-modal');
+        const emailModal = document.getElementById('email-modal');
+        const zoomModal = document.getElementById('zoom-modal');
+        const endSweetAlbumModal = document.getElementById('end-sweet-album-modal');
+        const endEvilAlbumModal = document.getElementById('end-evil-album-modal');
+        
+        // Buttons
+        const startButton = document.getElementById('start-button');
+        const statsButton = document.getElementById('stats-button');
+        const closeStatsButton = document.getElementById('close-stats-button');
+        const emailButton = document.getElementById('email-button');
+        const sendEmailButton = document.getElementById('send-email-button');
+        const cancelEmailButton = document.getElementById('cancel-email-button');
+        const heartButton = document.getElementById('heart-button');
+        const closeZoomButton = document.getElementById('close-zoom-button');
+        
+        // End Sweet Album Buttons
+        const endSweetTellThemButton = document.getElementById('end-sweet-tell-them-button');
+        const endSweetLookAgainButton = document.getElementById('end-sweet-look-again-button');
+        const playEvilAlbumButton = document.getElementById('play-evil-album-button');
+
+        // End Evil Album Buttons
+        const endEvilTellThemButton = document.getElementById('end-evil-tell-them-button');
+        const endEvilLookAgainButton = document.getElementById('end-evil-look-again-button');
+        const returnToSweetieAlbumButton = document.getElementById('return-to-sweetie-album-button');
+
+        // --- App State ---
+        let sweetiePhotos = [];
+        let evilPhotos = [];
+        let currentPhotos = [];
+        let currentIndex = 0;
+        let totalSwipes = 0;
+        let joinDate = null;
+        let isSwiping = false;
+        let isEvilMode = false;
+
+        // --- LocalStorage Functions ---
+        const saveData = () => {
+            const appData = { totalSwipes, joinDate };
+            localStorage.setItem('cosyApp', JSON.stringify(appData));
+        };
+
+        const loadData = () => {
+            sweetiePhotos = [
+                { id: 1, src: 'https://placehold.co/600x800/fecdd3/44403c?text=Our+First+Date', description: "Remember this? The start of everything." },
+                { id: 2, src: 'https://placehold.co/600x800/e9d5ff/44403c?text=That+Silly+Face', description: "You always know how to make me laugh." },
+                { id: 3, src: 'https://placehold.co/600x800/d9f99d/44403c?text=Our+Special+Place', description: "Can't wait to go back here with you." }
+            ];
+            evilPhotos = [
+                { id: 4, src: 'https://placehold.co/600x800/6b7280/e5e7eb?text=Ugh,+Them', description: "Why are they even here?" },
+                { id: 5, src: 'https://placehold.co/600x800/4b5563/d1d5db?text=Seriously%3F', description: "I can't even with this picture." },
+            ];
+            currentPhotos = sweetiePhotos;
+
+            const savedData = localStorage.getItem('cosyApp');
+            if (savedData) {
+                const appData = JSON.parse(savedData);
+                totalSwipes = appData.totalSwipes || 0;
+                joinDate = appData.joinDate || new Date().toISOString().split('T')[0];
+            } else {
+                joinDate = new Date().toISOString().split('T')[0];
+                saveData();
+            }
+            updateUI();
+        };
+
+        // --- Core Logic ---
+        const setAlbumMode = (isEvil) => {
+            isEvilMode = isEvil;
+            currentIndex = 0;
+            if (isEvilMode) {
+                currentPhotos = evilPhotos;
+                body.classList.remove('bg-rose-50', 'text-gray-800');
+                body.classList.add('bg-slate-800', 'text-white');
+                headerTitle.textContent = "The Others";
+                headerIconContainer.innerHTML = `<svg class="heart-icon text-purple-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12.7,2.2a1.2,1.2,0,0,0-1.4,0L3.6,9.9A7.3,7.3,0,0,0,8,21.2H8a2.1,2.1,0,0,0,2-1.8,8.4,8.4,0,0,1,4.1,0,2.1,2.1,0,0,0,2,1.8h0a7.3,7.3,0,0,0,4.4-11.3Z"/></svg>`;
+            } else {
+                currentPhotos = sweetiePhotos;
+                body.classList.remove('bg-slate-800', 'text-white');
+                body.classList.add('bg-rose-50', 'text-gray-800');
+                headerTitle.textContent = "Our Album";
+                headerIconContainer.innerHTML = `<svg class="heart-icon text-rose-500" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>`;
+            }
+            mainContent.classList.remove('hidden');
+            renderPhotos();
+        };
+
+        const createPhotoCard = (photo) => {
+            const card = document.createElement('div');
+            card.className = 'card absolute w-full h-full bg-white rounded-xl shadow-lg overflow-hidden flex flex-col';
+            card.style.zIndex = currentPhotos.length - currentIndex;
+            const img = document.createElement('img');
+            img.src = photo.src;
+            img.className = 'w-full h-4/5 object-cover cursor-pointer';
+            img.onerror = () => img.src = `https://placehold.co/600x800/fecdd3/44403c?text=Image+Missing`;
+            img.addEventListener('click', (e) => {
+                if (!e.target.closest('.card').style.transform) zoomImage(photo.src);
+            });
+            const descriptionContainer = document.createElement('div');
+            descriptionContainer.className = 'p-4 flex-grow flex items-center justify-center bg-white text-gray-800';
+            const description = document.createElement('p');
+            description.className = 'text-center';
+            description.textContent = photo.description;
+            descriptionContainer.appendChild(description);
+            card.appendChild(img);
+            card.appendChild(descriptionContainer);
+            return card;
+        };
+
+        const renderPhotos = () => {
+            photoStack.innerHTML = '';
+            const topPhotos = currentPhotos.slice(currentIndex, currentIndex + 3).reverse();
+            topPhotos.forEach((photo, i) => {
+                const card = createPhotoCard(photo);
+                photoStack.appendChild(card);
+            });
+            if (photoStack.querySelector('.card')) {
+                 addSwipeListeners(photoStack.querySelector('.card:last-child'));
+            }
+        };
+        
+        const handleSwipe = (direction) => {
+            const card = photoStack.querySelector('.card:last-child');
+            if (!card || isSwiping) return;
+
+            const correctDirection = isEvilMode ? 'left' : 'right';
+            if (direction !== correctDirection) {
+                notification.textContent = isEvilMode ? "Ugh, only left swipes for them! 😒" : "Naughty, naughty! Only right swipes here! 😉";
+                notification.classList.add('opacity-100');
+                setTimeout(() => notification.classList.remove('opacity-100'), 2000);
+                card.style.transform = '';
+                return;
+            }
+
+            isSwiping = true;
+            card.classList.add(direction === 'right' ? 'slide-out-right' : 'slide-out-left');
+            totalSwipes++;
+            setTimeout(() => {
+                currentIndex++;
+                if (currentIndex >= currentPhotos.length) {
+                    mainContent.classList.add('hidden');
+                    if (isEvilMode) {
+                        endEvilAlbumModal.classList.remove('hidden');
+                    } else {
+                        endSweetAlbumModal.classList.remove('hidden');
+                    }
+                } else {
+                    renderPhotos();
+                }
+                saveData();
+                updateUI();
+                isSwiping = false;
+            }, 500);
+        };
+
+        const addSwipeListeners = (element) => {
+            let startX = 0, distX = 0;
+            element.addEventListener('pointerdown', (e) => {
+                if (isSwiping) return;
+                startX = e.clientX;
+                element.style.transition = 'none';
+                const onPointerMove = (e) => {
+                    distX = e.clientX - startX;
+                    element.style.transform = `translateX(${distX}px) rotate(${distX / 20}deg)`;
+                };
+                const onPointerUp = () => {
+                    element.removeEventListener('pointermove', onPointerMove);
+                    element.removeEventListener('pointerup', onPointerUp);
+                    element.style.transition = 'transform 0.4s ease-out';
+                    if (Math.abs(distX) > 100) {
+                        handleSwipe(distX > 0 ? 'right' : 'left');
+                    } else {
+                        element.style.transform = '';
+                    }
+                };
+                element.addEventListener('pointermove', onPointerMove);
+                element.addEventListener('pointerup', onPointerUp);
+                element.addEventListener('pointercancel', onPointerUp);
+            });
+        };
+
+        const triggerHeartRain = () => {
+            if (isEvilMode) return; // No hearts for the evil!
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart-rain';
+                    heart.innerText = '❤️';
+                    heart.style.left = `${Math.random() * 100}vw`;
+                    heart.style.animationDuration = `${Math.random() * 2 + 3}s`;
+                    heartRainContainer.appendChild(heart);
+                    setTimeout(() => heart.remove(), 5000);
+                }, i * 100);
+            }
+        };
+
+        const zoomImage = (src) => {
+            zoomedImage.src = src;
+            zoomModal.classList.remove('hidden');
+        };
+
+        const updateUI = () => {
+            document.getElementById('stats-total-swipes').textContent = totalSwipes;
+            document.getElementById('stats-join-date').textContent = new Date(joinDate).toLocaleDateString();
+            if (currentIndex < currentPhotos.length) renderPhotos();
+        };
+        
+        // --- Event Listeners ---
+        startButton.addEventListener('click', () => introModal.classList.add('hidden'));
+        statsButton.addEventListener('click', () => statsModal.classList.remove('hidden'));
+        closeStatsButton.addEventListener('click', () => statsModal.classList.add('hidden'));
+        emailButton.addEventListener('click', () => emailModal.classList.remove('hidden'));
+        
+        cancelEmailButton.addEventListener('click', () => {
+            emailModal.classList.add('hidden');
+            if (mainContent.classList.contains('hidden')) {
+                if (isEvilMode) {
+                    endEvilAlbumModal.classList.remove('hidden');
+                } else {
+                    endSweetAlbumModal.classList.remove('hidden');
+                }
+            }
+        });
+
+        closeZoomButton.addEventListener('click', () => zoomModal.classList.add('hidden'));
+        zoomModal.addEventListener('click', (e) => {
+            if (e.target === zoomModal) zoomModal.classList.add('hidden');
+        });
+
+        heartButton.addEventListener('click', () => {
+            if (isSwiping) return;
+            if (window.navigator.vibrate) window.navigator.vibrate(50);
+            triggerHeartRain();
+        });
+
+        sendEmailButton.addEventListener('click', () => {
+            const recipient = document.getElementById('email-recipient').value;
+            const subject = document.getElementById('email-subject').value || document.getElementById('email-subject').placeholder;
+            const body = document.getElementById('email-body').value || document.getElementById('email-body').placeholder;
+            if (recipient) {
+                window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                emailModal.classList.add('hidden');
+                setAlbumMode(false); // Always return to sweetie mode after sending email
+            } else {
+                alert("Please enter your partner's email address! ❤️");
+            }
+        });
+
+        // Sweet Album End Listeners
+        endSweetTellThemButton.addEventListener('click', () => {
+            endSweetAlbumModal.classList.add('hidden');
+            emailModal.classList.remove('hidden');
+        });
+        endSweetLookAgainButton.addEventListener('click', () => {
+            endSweetAlbumModal.classList.add('hidden');
+            setAlbumMode(false);
+        });
+        playEvilAlbumButton.addEventListener('click', () => {
+            endSweetAlbumModal.classList.add('hidden');
+            setAlbumMode(true);
+        });
+
+        // Evil Album End Listeners
+        endEvilTellThemButton.addEventListener('click', () => {
+            endEvilAlbumModal.classList.add('hidden');
+            emailModal.classList.remove('hidden');
+        });
+        endEvilLookAgainButton.addEventListener('click', () => {
+            endEvilAlbumModal.classList.add('hidden');
+            setAlbumMode(true);
+        });
+        returnToSweetieAlbumButton.addEventListener('click', () => {
+            endEvilAlbumModal.classList.add('hidden');
+            setAlbumMode(false);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            const isModalOpen = !introModal.classList.contains('hidden') || !emailModal.classList.contains('hidden') || !statsModal.classList.contains('hidden') || !zoomModal.classList.contains('hidden') || !endSweetAlbumModal.classList.contains('hidden') || !endEvilAlbumModal.classList.contains('hidden');
+            if (!isModalOpen) {
+                if (e.key === 'ArrowRight') handleSwipe('right');
+                else if (e.key === 'ArrowLeft') handleSwipe('left');
+            } else if (!zoomModal.classList.contains('hidden') && e.key === 'Escape') {
+                closeZoomButton.click();
+            }
+        });
+
+        // --- Initialization ---
+        loadData();
+    });
+    </script>
+</body>
+</html>
