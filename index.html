@@ -69,18 +69,19 @@
         
         <!-- Main Content (Swiping) -->
         <main id="main-content" class="relative fade-in flex-grow flex flex-col">
-            <div id="photo-stack" class="relative w-full h-[60vh] rounded-xl flex-grow">
+            <!-- Photo stack height increased from 60vh to 75vh for better visibility on mobile -->
+            <div id="photo-stack" class="relative w-full h-[75vh] rounded-xl flex-grow">
                 <!-- Photos will be rendered here by JS -->
             </div>
 
             <!-- Action Buttons -->
             <div class="flex justify-center items-center space-x-8 mt-4 flex-shrink-0">
                  <button id="email-button" class="bg-white p-4 rounded-full shadow-md hover:bg-gray-100 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="heart-icon text-blue-500"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                </button>
-                <button id="heart-button" class="bg-white p-4 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="heart-icon text-rose-500"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                </button>
+                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="heart-icon text-blue-500"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                 </button>
+                 <button id="heart-button" class="bg-white p-4 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="heart-icon text-rose-500"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                 </button>
             </div>
         </main>
 
@@ -337,7 +338,7 @@
                 photoStack.appendChild(card);
             });
             if (photoStack.querySelector('.card')) {
-                 addSwipeListeners(photoStack.querySelector('.card:last-child'));
+                addSwipeListeners(photoStack.querySelector('.card:last-child'));
             }
         };
         
@@ -417,6 +418,7 @@
         };
 
         const zoomImage = (src) => {
+            const zoomedImage = document.getElementById('zoomed-image');
             zoomedImage.src = src;
             zoomModal.classList.remove('hidden');
         };
@@ -464,7 +466,11 @@
                 emailModal.classList.add('hidden');
                 setAlbumMode(false); // Always return to sweetie mode after sending email
             } else {
-                alert("Please enter your partner's email address! ❤️");
+                 // Using a custom modal/notification instead of alert would be better, but for simplicity:
+                const notification = document.getElementById('notification');
+                notification.textContent = "Please enter an email! ❤️";
+                notification.classList.add('opacity-100');
+                setTimeout(() => notification.classList.remove('opacity-100'), 3000);
             }
         });
 
