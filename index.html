@@ -227,13 +227,50 @@
 
         const loadData = () => {
             sweetiePhotos = [
-                { id: 1, src: 'https://placehold.co/600x800/fecdd3/44403c?text=Our+First+Date', description: "Remember this? The start of everything." },
-                { id: 2, src: 'https://placehold.co/600x800/e9d5ff/44403c?text=That+Silly+Face', description: "You always know how to make me laugh." },
-                { id: 3, src: 'https://placehold.co/600x800/d9f99d/44403c?text=Our+Special+Place', description: "Can't wait to go back here with you." }
+                // --- Original 12 Photos ---
+                { id: 1, src: 'https://i.imgur.com/EB7669s.jpg', description: "Aš esu... paslaptingas" },
+                { id: 2, src: 'https://i.imgur.com/R78dTId.jpg', description: "Turiningas žmogus su daug pinigų" },
+                { id: 3, src: 'https://i.imgur.com/WLa9jwy.jpg', description: "Nebijo rodyti savo meilę viešiausiose vietose" },
+                { id: 4, src: 'https://i.imgur.com/jjdtJG7.jpg', description: "Esu be jokių abejonių kiečiausias riešutėlis" },
+                { id: 5, src: 'https://i.imgur.com/rGg0b2R.jpg', description: "Tave matau net kai tu manęs nematai" },
+                { id: 6, src: 'https://i.imgur.com/ksFqwXl.jpg', description: "Stilius nepriekaištingas, kaip ir tu" },
+                { id: 7, src: 'https://i.imgur.com/slODhcn.jpg', description: "Pilvūzas begaliniam komfortui" },
+                { id: 8, src: 'https://i.imgur.com/AQ4CvqT.jpg', description: "Bėgsiu per didžiausias audras dėl tavęs" },
+                { id: 9, src: 'https://i.imgur.com/fXZ7dqC.jpg', description: "Labas ką tu" }, // Was description for id 8
+                { id: 10, src: 'https://i.imgur.com/E4Go1UI.jpg', description: "Slayyyyyyyyyyyyyyy" }, // Was description for id 9
+                { id: 11, src: 'https://i.imgur.com/iOwaeBe.jpg', description: "Ypatingai dideli antakiai" }, // Was description for id 10
+                { id: 12, src: 'https://i.imgur.com/RlRyRxZ.jpg', description: "Tikintis tavimi visa savo širdimi" }, // Was description for id 11
+                { id: 13, src: 'https://i.imgur.com/m6HYzIL.jpeg', description: "Medžioklininkas prie Kupiškio" }, // Was description for id 12
+                { id: 14, src: 'https://i.imgur.com/2kGyHtn.jpeg', description: "Pinigai neiškels tavęs virš kitų" }, // Was description for id 13
+                { id: 15, src: 'https://i.imgur.com/UvuYwWL.jpeg', description: "Visiems reikia savo grožio miegelio" }, // Was description for id 14
+                { id: 16, src: 'https://i.imgur.com/zPT7UXb.jpeg', description: "Gal atspėsi, kur esu?" }, // Was description for id 15
+                { id: 17, src: 'https://i.imgur.com/olwaKRv.jpeg', description: "Kodėl tu čia, kas tau yra?" }, // Was description for id 16
+                { id: 18, src: 'https://i.imgur.com/xbVKk5A.jpeg', description: "Aš gaminsiu tik tau ir tau vienai" }, // Was description for id 17
+                { id: 19, src: 'https://i.imgur.com/lMNwnSx.jpeg', description: "Aš figuruoju tavo sapnuose" }, // Was description for id 18
+                { id: 20, src: 'https://i.imgur.com/GEghxuz.jpeg', description: "Mano tetis yra budizmą skaitęs" }, // Was description for id 19
+                { id: 21, src: 'https://i.imgur.com/960vXmk.jpeg', description: "Nori tobulų pusryčių?" }, // Was description for id 20
+                { id: 22, src: 'https://i.imgur.com/i0BJB8Q.jpeg', description: "Mėgstantis paišdykauti" }, // Was description for id 21
+                { id: 23, src: 'https://i.imgur.com/tEg1gNy.jpeg', description: "Trečiasis karalius nešantis myrą" }, // Was description for id 22
+                { id: 24, src: 'https://i.imgur.com/DNGmGlz.jpeg', description: "Sportas iš aš - neatsiejami dalykai" }, // Was description for id 23
+                { id: 25, src: 'https://i.imgur.com/irIoxKr.jpeg', description: "Maistas į namus - mygom, kaip sakoma" }, // Was description for id 24
+                { id: 26, src: 'https://i.imgur.com/DDJiOGI.jpeg', description: "Plaukuoti draugai ne visada būna ječiai" }, // Was description for id 25
+                { id: 27, src: 'https://i.imgur.com/b6xRyZ7.jpeg', description: "Net kai manęs nėra, aš esu" }, // Was description for id 26
+                { id: 28, src: 'https://i.imgur.com/8hY5Gpy.jpeg', description: "Aš tau paliksiu biški" } // Was description for id 27
             ];
+
+            // Updated IDs to avoid conflict with the new photos.
             evilPhotos = [
-                { id: 4, src: 'https://placehold.co/600x800/6b7280/e5e7eb?text=Ugh,+Them', description: "Why are they even here?" },
-                { id: 5, src: 'https://placehold.co/600x800/4b5563/d1d5db?text=Seriously%3F', description: "I can't even with this picture." },
+                { id: 29, src: 'https://i.imgur.com/RwzTLTq.jpeg', description: "Fyfa berniukas kažkoks nafik" },
+                { id: 30, src: 'https://i.imgur.com/jPBde7R.jpeg', description: "Feikas, tegu larp'ina su savo netikrais riteriais" },
+                // --- New Funny "Rivals" ---
+                { id: 31, src: 'https://img.sparknews.funkemedien.de/141224920/141224920_1432132261_v16_9_1200.jpeg', description: "Nu tiesiog nelegalu būtų" },
+                { id: 32, src: 'https://live.staticflickr.com/335/32070037841_0bc309dd20_z.jpg', description: "Iš Taivano, bet nu, tas vienas plaukas..." },
+                { id: 33, src: 'https://media.istockphoto.com/id/950486086/photo/creepy-guy-with-a-mustache.jpg?s=612x612&w=0&k=20&c=w-ANmer03iJfr23yF2O2lRFU0GmoQujRdMV3DSIicXA=', description: "Ūsai atrodo kaip medinis tiltelis" },
+                { id: 34, src: 'https://singersroom.com/wp-content/uploads/2023/11/15-Best-Male-Singers-of-All-Time.jpg', description: "Akivaizdžiai leidžia pinigus ant negerų rūbų brandų" },
+                { id: 35, src: 'https://5.imimg.com/data5/SELLER/Default/2022/10/MS/UW/PU/161562894/fashion-garments-500x500.jpg', description: "Neseniai mirė jo žmona, bet neaišku kaip" },
+                { id: 36, src: 'https://preview.redd.it/ovfk3xy2o4q51.jpg?width=1080&crop=smart&auto=webp&s=81177cbde88d95f927b0cd66673918fabd4e4423', description: "Tu turi parodyt pilną ryžtą" },
+                { id: 37, src: 'https://womenwhospeakinchurch.com/wp-content/uploads/2011/05/chair.jpg', description: "???????" },
+                { id: 38, src: 'https://i.imgur.com/xKDmrvP.jpeg', description: "Aš apie ateivius net nekomentuosiu" },
             ];
             currentPhotos = sweetiePhotos;
 
